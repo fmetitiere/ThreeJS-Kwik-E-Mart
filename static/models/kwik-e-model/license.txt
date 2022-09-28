@@ -1,0 +1,11 @@
+Model Information:
+* title:	Kwik-E- Mart FB
+* source:	https://sketchfab.com/3d-models/kwik-e-mart-fb-839a2c8f36bf4fbeb5b9e93b05123f0d
+* author:	igor.tesV (https://sketchfab.com/igor.tesV)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Kwik-E- Mart FB" (https://sketchfab.com/3d-models/kwik-e-mart-fb-839a2c8f36bf4fbeb5b9e93b05123f0d) by igor.tesV (https://sketchfab.com/igor.tesV) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -21,3 +21,10 @@ lights.add(directionalLight, "intensity").min(0).max(1).step(0.001);
 lights.add(directionalLight.position, "x").min(-5).max(5).step(0.001);
 lights.add(directionalLight.position, "y").min(-5).max(5).step(0.001);
 lights.add(directionalLight.position, "z").min(-5).max(5).step(0.001);
+
+
+export const spotLight = new THREE.SpotLight("#fff", 5, 50, 22);
+spotLight.position.set(-17, 26, -6);
+
+export const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
+light.position.set(0.5, 1, 0.75);

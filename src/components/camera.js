@@ -15,6 +15,7 @@ window.addEventListener("resize", () => {
   // Update sizes
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
+  direction.normalize(); // this ensures consistent movements in all directions
 
   // Update camera
   camera.aspect = sizes.width / sizes.height;
@@ -29,12 +30,13 @@ window.addEventListener("resize", () => {
 export const camera = new THREE.PerspectiveCamera(
   75,
   sizes.width / sizes.height,
-  0.1,
-  100
+  1,
+  1000
 );
-camera.position.x = 50;
-camera.position.y = 12;
-camera.position.z = 0;
+camera.position.x = 38;
+camera.position.y = 15;
+camera.position.z = 7;
+camera.rotation.y = (Math.PI / 2);;
 
 
 const cameraConfig = gui.addFolder("Camera");
@@ -42,3 +44,4 @@ const cameraConfig = gui.addFolder("Camera");
 cameraConfig.add(camera.position, "x").min(-100).max(100).step(0.001);
 cameraConfig.add(camera.position, "y").min(-100).max(100).step(0.001);
 cameraConfig.add(camera.position, "z").min(-100).max(100).step(0.001);
+
