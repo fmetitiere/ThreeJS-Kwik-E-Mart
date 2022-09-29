@@ -32,8 +32,8 @@ export const crackers = new THREE.Mesh(
 
 crackers.castShadow = true;
 crackers.rotation.y = Math.PI * 1;
-crackers.position.set(0, 13, 0);
-crackers.scale.set(0.07, 0.1, 0.07);
+crackers.position.set(4.3, 13.7, 8.4);
+crackers.scale.set(0.04, 0.05, 0.04);
 
 crackers.material.roughness = 0.1;
 crackers.material.metalness = 0.2;

@@ -50,22 +50,35 @@
       }
       #my_div {
         display: none;
+        width: 100%;
+        position: absolute;
+        height: 100%;
+        background: rgb(0 0 0 / 80%);
       }
       .modal {
-        background-color: red;
-        position: absolute;
-        top: 0;
-        width: 10rem;
-        height: 10rem;
-        right: 0;
         text-align: center;
-        left: 0;
         margin: auto;
         display: flex;
         align-items: center;
         justify-content: center;
       }
+      .modal .content {
+        background: white;
+        display: flex;
+        flex-direction: column;
+        width: 8rem;
+        padding: 1rem;
+      }
       #reset-btn {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        width: 7rem;
+        margin: 0 auto;
+        display: none;
+      }
+      #next-btn {
         position: absolute;
         bottom: 1rem;
         left: 0;
@@ -89,11 +102,14 @@
     </div>
     <div id="my_div">
       <div class="modal">
-        text
-        <button onclick="myFunction()">canel</button>
+        <div class="content">
+          <img src="/static/textures/crackers.png" alt="image">
+          <button onclick="myFunction()">canel</button>
+        </div>
       </div>
     </div>
     <button class="btn btn-primary" id="reset-btn">Reset</button>
+    <button class="btn btn-primary" id="next-btn">Next</button>
   </body>
   <script>
     function myFunction() {

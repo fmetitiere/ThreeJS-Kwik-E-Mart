@@ -18,9 +18,6 @@ import gsap from "gsap";
 
 import * as dat from "dat.gui";
 
-
-
-
 // Scene
 export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
@@ -32,31 +29,47 @@ scene.add(crackers);
 
 //Loader
 
-scene.add(overlay)
+scene.add(overlay);
 
-const textureLoader = new THREE.TextureLoader(loadingManager);
-const crowdColorTexture = textureLoader.load("/textures/crackers.png");
+// Products
 
-for (let i = 0; i < 5; i++) {
-  const crowd = new THREE.Mesh(
-    new THREE.PlaneGeometry(17, 17, 1, 1),
-    new THREE.MeshStandardMaterial({
-      map: crowdColorTexture,
-      transparent: true,
-    })
-  );
+function addProducts(product, texture, posY, posZ, rotY) {
+  product = product;
+  posY = posY;
+  posZ = posZ;
+  rotY = rotY;
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const colorTexture = textureLoader.load(texture);
 
-  const x = i * 20 - 30;
+  for (let i = 0; i < 6; i++) {
+    product = new THREE.Mesh(
+      new THREE.PlaneGeometry(17, 17, 1, 1),
+      new THREE.MeshStandardMaterial({
+        map: colorTexture,
+        transparent: true,
+      })
+    );
 
-  crowd.castShadow = true;
-  crowd.rotation.y = Math.PI * 0.5;
-  crowd.position.set(x, -5, 0);
+    const x = i * 1 + 4.3;
 
-  crowd.material.roughness = 0.6;
-  crowd.material.metalness = 0.2;
+    product.castShadow = true;
+    product.rotation.y = rotY;
+    product.scale.set(0.04, 0.05, 0.04);
+    product.position.set(x, posY, posZ);
 
-  //scene.add(crowd);
+    product.material.roughness = 0.6;
+    product.material.metalness = 0.2;
+
+    scene.add(product);
+  }
 }
+
+addProducts("crack", "/textures/crackers.png", 13.7, 8.5, Math.PI / 1);
+addProducts("crack", "/textures/crackers.png", 12.7, 8.5, Math.PI / 1);
+addProducts("crack", "/textures/crackers.png", 11.7, 8.5, Math.PI / 1);
+addProducts("crack", "/textures/crackers.png", 10.7, 8.5, Math.PI / 1);
+
+addProducts("crack", "/textures/crackers.png", 13.7, 9.5, Math.PI / 11);
 
 /**
  * Lights
@@ -92,8 +105,15 @@ const onKeyDown = function (event) {
   switch (event.code) {
     case "ArrowUp":
     case "KeyW":
-      console.log(moveDoors);
+      if (isCameraTravelling === true) {
+        return false;
+      }
       isCameraTravelling = true;
+      setTimeout(function () {
+        isCameraTravelling = false;
+      }, 8000);
+      console.log(isCameraTravelling);
+
       if (!step1) {
         gsap.to(camera.position, {
           duration: 2,
@@ -107,71 +127,86 @@ const onKeyDown = function (event) {
         setTimeout(() => {
           step1 = true;
           scene2 = true;
-          moveDoors = true;
         }, 2000);
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 2,
-          x: 15,
-          y: 17,
-          z: 15,
-          ease: "none",
-        });
-        gsap.to(camera2.rotation, {
-          duration: 2,
-          delay: 2,
-          x: 0,
-          y: 0,
-          z: 0,
-          ease: "none",
-        });
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 2,
-          x: 10,
-          y: 17,
-          z: 15,
-          ease: "none",
-        });
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 4,
-          x: 5,
-          y: 17,
-          z: 15,
-          ease: "none",
-        });
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 6,
-          x: 5,
-          y: 17,
-          z: 0,
-          ease: "none",
-        });
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 6,
-          x: 0,
-          y: 15,
-          z: -8,
-          ease: "none",
-        });
-        gsap.to(camera2.rotation, {
-          duration: 2,
-          delay: 6,
-          x: 0,
-          y: -2.5,
-          z: 0,
-          ease: "none",
-        });
+        if (isCameraTravelling) {
+          gsap.to(camera2.position, {
+            duration: 2,
+            delay: 2,
+            x: 15,
+            y: 17,
+            z: 20,
+            ease: "none",
+          });
+          gsap.to(camera2.rotation, {
+            duration: 2,
+            delay: 2,
+            x: 0,
+            y: 0,
+            z: 0,
+            ease: "none",
+          });
+          gsap.to(camera2.position, {
+            duration: 2,
+            delay: 2,
+            x: 5,
+            y: 17,
+            z: 23,
+            ease: "none",
+          });
+          gsap.to(camera2.position, {
+            duration: 2,
+            delay: 4,
+            x: 5,
+            y: 17,
+            z: 15,
+            ease: "none",
+          });
+          gsap.to(camera2.position, {
+            duration: 2,
+            delay: 6,
+            x: 5,
+            y: 17,
+            z: 0,
+            ease: "none",
+          });
+          gsap.to(camera2.position, {
+            duration: 2,
+            delay: 6,
+            x: 0,
+            y: 15,
+            z: -8,
+            ease: "none",
+          });
+          gsap.to(camera2.rotation, {
+            duration: 2,
+            delay: 6,
+            x: 0,
+            y: -2.5,
+            z: 0,
+            ease: "none",
+          });
+        }
       } else if (step1 && !step2 && scene2) {
         gsap.to(camera2.position, {
           duration: 2,
           delay: 0,
           x: 0,
           y: 15,
-          z: -22,
+          z: 10,
+        });
+        gsap.to(camera2.position, {
+          duration: 4,
+          delay: 2,
+          x: 6,
+          y: 12,
+          z: 2.5,
+        });
+        gsap.to(camera2.rotation, {
+          duration: 4,
+          delay: 2,
+          x: 0,
+          y: -3,
+          z: 0,
         });
 
         setTimeout(() => {
@@ -187,31 +222,61 @@ window.addEventListener("click", () => {});
 
 document.addEventListener("keydown", onKeyDown);
 
-const element = document.getElementById("reset-btn");
-element.addEventListener("click", myFunction);
+const nextBtn = document.getElementById("next-btn");
+nextBtn.addEventListener("click", nextStep);
 
-function myFunction() {
-  scene2 = false;
-  step1 = false;
-  isCameraTravelling = false;
-  camera.position.x = 38;
-  camera.position.y = 15;
-  camera.position.z = 7;
-  camera.rotation.y = Math.PI / 2;
-  camera2.position.x = 15;
-  camera2.position.y = 15;
-  camera2.position.z = 7;
-  camera2.rotation.y = Math.PI / 2;
+function nextStep() {
+  if (step1 && !step2 && scene2 && !isCameraTravelling) {
+    gsap.to(camera2.position, {
+      duration: 2,
+      delay: 0,
+      x: 0,
+      y: 15,
+      z: 10,
+    });
+    gsap.to(camera2.position, {
+      duration: 4,
+      delay: 2,
+      x: 6,
+      y: 12,
+      z: 2.5,
+    });
+    gsap.to(camera2.rotation, {
+      duration: 4,
+      delay: 2,
+      x: 0,
+      y: -3,
+      z: 0,
+    });
+
+    setTimeout(() => {
+      step2 = true;
+    }, 2000);
+  }
 }
 
 // Market
 
+let apuMixer = null;
 let mixer = null;
+
+const apu = new GLTFLoader(loadingManager);
+
+apu.load("/models/apu/scene.gltf", (gltf) => {
+  scene.add(gltf.scene);
+  gltf.scene.scale.set(2, 2, 2);
+  gltf.scene.position.set(13, 10, -5);
+  gltf.scene.rotation.set(0, Math.PI * 0, 0);
+  gltf.scene.castShadow = true;
+
+  apuMixer = new THREE.AnimationMixer(gltf.scene);
+  const action = apuMixer.clipAction(gltf.animations[0]);
+  action.play();
+});
 
 const market = new GLTFLoader(loadingManager);
 
 market.load("/models/kwik-e-model/scene.gltf", (gltf) => {
-  console.log(gltf);
   scene.add(gltf.scene);
   gltf.scene.scale.set(3, 3, 3);
   gltf.scene.position.set(10, 10, 5);
@@ -223,7 +288,9 @@ market.load("/models/kwik-e-model/scene.gltf", (gltf) => {
   action.play();
 });
 
-Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 5, 10, 5, 0);
+Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 7, 10, 15, 0);
+Loader3D("rack-2", "/models/market_racks/model-empty-1.gltf", 0.5, 7, 10, 8, 0);
+Loader3D("desktop", "/models/desktop.gltf", 0.45, 12, 10, -5, 0);
 Loader3D(
   "door-1",
   "/models/doors/model.gltf",
@@ -276,7 +343,6 @@ document.body.appendChild(renderer.domElement);
 /**
  * Object Interaction
  */
-console.log(document.fullscreenEnabled);
 
 window.addEventListener("click", () => {
   var elem = document.getElementById("my_div");
@@ -285,8 +351,6 @@ window.addEventListener("click", () => {
     if (currentIntersect.object === crackers) {
       console.log("crackers");
       elem.style.display = "block";
-
-      console.log(document.fullscreenEnabled);
     } else {
     }
   }
@@ -311,16 +375,22 @@ const tick = () => {
   if (mixer !== null) {
     mixer.update(deltaTime);
   }
+  if (apuMixer !== null) {
+    apuMixer.update(deltaTime);
+  }
   // Update Orbital Controls
 
   var btnReset = document.getElementById("reset-btn");
+  var btnNext = document.getElementById("next-btn");
   if (scene2) {
     btnReset.style.display = "block";
+    btnNext.style.display = "block";
 
     controls2.update(0);
     controls.unlock();
   } else {
     btnReset.style.display = "none";
+    btnNext.style.display = "none";
   }
   // Cast a ray
   const rayDirection = new THREE.Vector3(100, 0, 0);
