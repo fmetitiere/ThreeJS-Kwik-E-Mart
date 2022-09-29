@@ -31,12 +31,12 @@ export const camera = new THREE.PerspectiveCamera(
   75,
   sizes.width / sizes.height,
   1,
-  1000
+  2000
 );
 camera.position.x = 38;
 camera.position.y = 15;
 camera.position.z = 7;
-camera.rotation.y = (Math.PI / 2);;
+camera.rotation.y = (Math.PI / 2);
 
 
 const cameraConfig = gui.addFolder("Camera");
@@ -56,4 +56,4 @@ export const camera2 = new THREE.PerspectiveCamera(
 camera2.position.x = 15;
 camera2.position.y = 15;
 camera2.position.z = 7;
-camera2.rotation.y = (Math.PI / 2);;
+camera2.rotation.y = (Math.PI / 2);

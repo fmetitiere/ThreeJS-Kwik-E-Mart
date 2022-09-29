@@ -10,11 +10,16 @@ import {
 import { sizes, camera, camera2 } from "./components/camera";
 import { controls, controls2 } from "./components/controls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { overlay } from "./components/loader";
+import { loadingManager } from "./components/loader";
 
 import { crackers, Loader3D } from "./components/objects";
 import gsap from "gsap";
 
 import * as dat from "dat.gui";
+
+
+
 
 // Scene
 export const scene = new THREE.Scene();
@@ -25,8 +30,11 @@ scene.fog = new THREE.Fog(0x87ceeb, 0, 750);
 scene.add(floor);
 scene.add(crackers);
 
-const textureLoader = new THREE.TextureLoader();
+//Loader
 
+scene.add(overlay)
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
 const crowdColorTexture = textureLoader.load("/textures/crackers.png");
 
 for (let i = 0; i < 5; i++) {
@@ -62,7 +70,7 @@ scene.add(light);
  * Camera
  */
 
-let scene2 = false;
+export let scene2 = false;
 
 if (scene2) {
   scene.add(camera2);
@@ -75,6 +83,7 @@ if (scene2) {
 // Controls
 
 let moveDoors = false;
+let isCameraTravelling = false;
 let step1 = false;
 let step2 = false;
 let step3 = false;
@@ -84,6 +93,7 @@ const onKeyDown = function (event) {
     case "ArrowUp":
     case "KeyW":
       console.log(moveDoors);
+      isCameraTravelling = true;
       if (!step1) {
         gsap.to(camera.position, {
           duration: 2,
@@ -99,7 +109,6 @@ const onKeyDown = function (event) {
           scene2 = true;
           moveDoors = true;
         }, 2000);
-
         gsap.to(camera2.position, {
           duration: 2,
           delay: 2,
@@ -178,13 +187,30 @@ window.addEventListener("click", () => {});
 
 document.addEventListener("keydown", onKeyDown);
 
+const element = document.getElementById("reset-btn");
+element.addEventListener("click", myFunction);
+
+function myFunction() {
+  scene2 = false;
+  step1 = false;
+  isCameraTravelling = false;
+  camera.position.x = 38;
+  camera.position.y = 15;
+  camera.position.z = 7;
+  camera.rotation.y = Math.PI / 2;
+  camera2.position.x = 15;
+  camera2.position.y = 15;
+  camera2.position.z = 7;
+  camera2.rotation.y = Math.PI / 2;
+}
+
 // Market
 
 let mixer = null;
 
-const obj = new GLTFLoader();
+const market = new GLTFLoader(loadingManager);
 
-obj.load("/models/kwik-e-model/scene.gltf", (gltf) => {
+market.load("/models/kwik-e-model/scene.gltf", (gltf) => {
   console.log(gltf);
   scene.add(gltf.scene);
   gltf.scene.scale.set(3, 3, 3);
@@ -196,7 +222,6 @@ obj.load("/models/kwik-e-model/scene.gltf", (gltf) => {
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 });
-
 
 Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 5, 10, 5, 0);
 Loader3D(
@@ -287,9 +312,15 @@ const tick = () => {
     mixer.update(deltaTime);
   }
   // Update Orbital Controls
+
+  var btnReset = document.getElementById("reset-btn");
   if (scene2) {
+    btnReset.style.display = "block";
+
     controls2.update(0);
     controls.unlock();
+  } else {
+    btnReset.style.display = "none";
   }
   // Cast a ray
   const rayDirection = new THREE.Vector3(100, 0, 0);

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { scene } from "./../main";
+import { loadingManager } from "./loader";
 import gsap from "gsap";
 
 const textureLoader = new THREE.TextureLoader();
@@ -8,7 +9,11 @@ const textureLoader = new THREE.TextureLoader();
 // Floor
 export const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(2000, 2000, 100, 100),
-  new THREE.MeshStandardMaterial({})
+  new THREE.MeshStandardMaterial({
+    color: "black",
+    roughness: 0.9,
+    metalness: 0.5,
+  })
 );
 
 floor.rotation.x = -Math.PI * 0.5;
@@ -50,7 +55,7 @@ export function Loader3D(
   animY,
   animZ
 ) {
-  const obj = new GLTFLoader();
+  const obj = new GLTFLoader(loadingManager);
   name = obj;
 
   scale = scale;
