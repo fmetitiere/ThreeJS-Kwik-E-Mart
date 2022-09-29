@@ -49,7 +49,7 @@
       p {
         color: white;
       }
-      #my_div {
+      #ratzModal {
         display: none;
         width: 100%;
         position: absolute;
@@ -101,10 +101,10 @@
         </p>
       </div>
     </div>
-    <div id="my_div">
+    <div id="ratzModal">
       <div class="modal">
         <div class="content">
-          <img src="/static/textures/crackers.png" alt="image">
+          <img class="img-fluid" src="./../static/crackers.ico" alt="image">
           <button onclick="myFunction()">canel</button>
         </div>
       </div>
@@ -114,7 +114,7 @@
   </body>
   <script>
     function myFunction() {
-      var x = document.getElementById("my_div");
+      var x = document.getElementById("ratzModal");
       if (x.style.display === "none") {
         x.style.display = "block";
       } else {

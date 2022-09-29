@@ -345,7 +345,7 @@ document.body.appendChild(renderer.domElement);
  */
 
 window.addEventListener("click", () => {
-  var elem = document.getElementById("my_div");
+  var elem = document.getElementById("ratzModal");
 
   if (currentIntersect) {
     if (currentIntersect.object === crackers) {
