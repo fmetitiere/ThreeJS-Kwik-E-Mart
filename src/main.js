@@ -16,7 +16,6 @@ import { loadingManager } from "./components/loader";
 import { crackers, Loader3D } from "./components/objects";
 import gsap from "gsap";
 
-import * as dat from "dat.gui";
 
 // Scene
 export const scene = new THREE.Scene();

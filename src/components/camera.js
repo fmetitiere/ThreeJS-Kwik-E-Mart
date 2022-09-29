@@ -39,11 +39,7 @@ camera.position.z = 7;
 camera.rotation.y = (Math.PI / 2);
 
 
-const cameraConfig = gui.addFolder("Camera");
 
-cameraConfig.add(camera.position, "x").min(-100).max(100).step(0.001);
-cameraConfig.add(camera.position, "y").min(-100).max(100).step(0.001);
-cameraConfig.add(camera.position, "z").min(-100).max(100).step(0.001);
 
 
 
