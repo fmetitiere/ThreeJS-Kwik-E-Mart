@@ -377,7 +377,7 @@ const tick = () => {
   } else {
     scene.remove(overlay);
   }
-  
+
   const elapsedTime = clock.getElapsedTime();
   const deltaTime = elapsedTime - previousTime;
   previousTime = elapsedTime;
@@ -418,6 +418,13 @@ const tick = () => {
   if (intersects.length) {
     if (!currentIntersect) {
       crackers.material.color.set("#b35f45");
+      gsap.to(crackers.position, {
+        duration: 2,
+        delay: 0,
+        x: 4.3,
+        y: 13.9,
+        z: 8.4,
+      });
       console.log("mouse enter");
     }
 
@@ -425,6 +432,13 @@ const tick = () => {
   } else {
     if (currentIntersect) {
       crackers.material.color.set("#fff");
+      gsap.to(crackers.position, {
+        duration: 2,
+        delay: 0, 
+        x: 4.3,
+        y: 13.7,
+        z: 8.4,
+      });
       console.log("mouse leave");
     }
 
