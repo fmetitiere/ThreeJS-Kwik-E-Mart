@@ -11,13 +11,13 @@ import { sizes, camera, camera2 } from "./components/camera";
 import { controls, controls2 } from "./components/controls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import { crackers } from "./components/objects";
+import { crackers, Loader3D } from "./components/objects";
 import gsap from "gsap";
 
 import * as dat from "dat.gui";
 
 // Scene
-const scene = new THREE.Scene();
+export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
 scene.fog = new THREE.Fog(0x87ceeb, 0, 750);
 
@@ -93,7 +93,6 @@ const onKeyDown = function (event) {
           z: 7,
           ease: "none",
         });
-       
 
         setTimeout(() => {
           step1 = true;
@@ -172,155 +171,65 @@ const onKeyDown = function (event) {
       }
 
       break;
-
-    /*  case "ArrowLeft":
-       case "KeyA":
-      moveLeft = true;
-      break;
-
-    case "ArrowDown":
-    case "KeyS":
-      moveBackward = true;
-      break;
-
-    case "ArrowRight":
-    case "KeyD":
-      moveRight = true;
-      break;
-
-    case "Space":
-      if (canJump === true) velocity.y += 350;
-      canJump = false;
-      break; */
   }
 };
-/* 
-const onKeyUp = function (event) {
-  switch (event.code) {
-    case "ArrowUp":
-    case "KeyW":
-      moveForward = false;
-      break;
-
-    case "ArrowLeft":
-    case "KeyA":
-      moveLeft = false;
-      break;
-
-    case "ArrowDown":
-    case "KeyS":
-      moveBackward = false;
-      break;
-
-    case "ArrowRight":
-    case "KeyD":
-      moveRight = false;
-      break;
-  }
-}; */
 
 window.addEventListener("click", () => {});
 
 document.addEventListener("keydown", onKeyDown);
-/* document.addEventListener("keyup", onKeyUp); */
 
 // Market
 
-const market = new GLTFLoader();
+let mixer = null;
 
-market.load(
-  "/models/kwik-e-model/scene.gltf",
-  (gltf) => {
-    console.log(gltf);
-    scene.add(gltf.scene);
-    gltf.scene.scale.set(3, 3, 3);
-    gltf.scene.position.set(10, 10, 5);
-    gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
-    gltf.scene.castShadow = true;
-  },
-  () => {
-    console.log("progress");
-  },
-  () => {
-    console.log("error");
-  }
-);
+const obj = new GLTFLoader();
 
-const racks = new GLTFLoader();
+obj.load("/models/kwik-e-model/scene.gltf", (gltf) => {
+  console.log(gltf);
+  scene.add(gltf.scene);
+  gltf.scene.scale.set(3, 3, 3);
+  gltf.scene.position.set(10, 10, 5);
+  gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
+  gltf.scene.castShadow = true;
 
-racks.load(
-  "/models/market_racks/model.gltf",
-  (gltf) => {
-    console.log(gltf);
-    scene.add(gltf.scene);
-    gltf.scene.scale.set(0.5, 0.5, 0.5);
-    gltf.scene.position.set(5, 10, 5);
-    gltf.scene.rotation.set(0, 0, 0);
-    gltf.scene.castShadow = true;
-  },
-  () => {
-    console.log("progress");
-  },
-  () => {
-    console.log("error");
-  }
-);
+  mixer = new THREE.AnimationMixer(gltf.scene);
+  const action = mixer.clipAction(gltf.animations[0]);
+  action.play();
+});
 
-const door = new GLTFLoader();
 
-door.load(
+Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 5, 10, 5, 0);
+Loader3D(
+  "door-1",
   "/models/doors/model.gltf",
-  (gltf) => {
-    console.log(gltf);
-    scene.add(gltf.scene);
-    gltf.scene.scale.set(3, 3, 3);
-    gltf.scene.position.set(18, 10, 5);
-    gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
-    gltf.scene.castShadow = true;
-    gsap.to(gltf.scene.position, {
-      duration: 2,
-      delay: 3,
-      x: 18,
-      y: 10,
-      z: 2,
-    });
-    console.log(moveDoors);
-  },
-  () => {
-    console.log("progress");
-  },
-  () => {
-    console.log("error");
-  }
+  3,
+  18,
+  10,
+  5,
+  Math.PI * 0.5,
+  true,
+  2,
+  3,
+  18,
+  10,
+  2
 );
-
-const door2 = new GLTFLoader();
-
-door2.load(
+Loader3D(
+  "door-2",
   "/models/doors/model.gltf",
-  (gltf) => {
-    console.log(gltf);
-    scene.add(gltf.scene);
-    gltf.scene.scale.set(3, 3, 3);
-    gltf.scene.position.set(18, 10, 7.9);
-    gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
-    gltf.scene.castShadow = true;
-    gsap.to(gltf.scene.position, {
-      duration: 2,
-      delay: 3,
-      x: 18,
-      y: 10,
-      z: 10.5,
-    });
-    console.log(moveDoors);
-  },
-  () => {
-    console.log("progress");
-  },
-  () => {
-    console.log("error");
-  }
+  3,
+  18,
+  10,
+  7.9,
+  Math.PI * 0.5,
+  true,
+  2,
+  3,
+  18,
+  10,
+  10.5
 );
+
 //
 
 /**
@@ -367,9 +276,16 @@ const raycaster = new THREE.Raycaster();
 const clock = new THREE.Clock();
 let currentIntersect = null;
 
+let previousTime = 0;
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+  const deltaTime = elapsedTime - previousTime;
+  previousTime = elapsedTime;
 
+  if (mixer !== null) {
+    mixer.update(deltaTime);
+  }
   // Update Orbital Controls
   if (scene2) {
     controls2.update(0);
