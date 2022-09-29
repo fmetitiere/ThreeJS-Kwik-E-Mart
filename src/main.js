@@ -7,18 +7,14 @@ import {
   directionalLight,
   spotLight,
 } from "./components/lights";
-import { sizes, camera } from "./components/camera";
-import { controls } from "./components/controls";
+import { sizes, camera, camera2 } from "./components/camera";
+import { controls, controls2 } from "./components/controls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { crackers } from "./components/objects";
 import gsap from "gsap";
 
 import * as dat from "dat.gui";
-
-// Canvas
-const canvas = document.querySelector("canvas.webgl");
-const objects = [];
 
 // Scene
 const scene = new THREE.Scene();
@@ -65,11 +61,18 @@ scene.add(light);
 /**
  * Camera
  */
-scene.add(camera);
+
+let scene2 = false;
+
+if (scene2) {
+  scene.add(camera2);
+  scene.remove(camera);
+} else {
+  scene.add(camera);
+  scene.remove(camera2);
+}
 
 // Controls
-
-scene.add(controls.getObject());
 
 let moveDoors = false;
 let step1 = false;
@@ -80,7 +83,6 @@ const onKeyDown = function (event) {
   switch (event.code) {
     case "ArrowUp":
     case "KeyW":
-      moveDoors = true;
       console.log(moveDoors);
       if (!step1) {
         gsap.to(camera.position, {
@@ -89,13 +91,74 @@ const onKeyDown = function (event) {
           x: 15,
           y: 15,
           z: 7,
+          ease: "none",
         });
+       
 
         setTimeout(() => {
           step1 = true;
+          scene2 = true;
+          moveDoors = true;
         }, 2000);
-      } else if (step1 && !step2) {
-        gsap.to(camera.position, {
+
+        gsap.to(camera2.position, {
+          duration: 2,
+          delay: 2,
+          x: 15,
+          y: 17,
+          z: 15,
+          ease: "none",
+        });
+        gsap.to(camera2.rotation, {
+          duration: 2,
+          delay: 2,
+          x: 0,
+          y: 0,
+          z: 0,
+          ease: "none",
+        });
+        gsap.to(camera2.position, {
+          duration: 2,
+          delay: 2,
+          x: 10,
+          y: 17,
+          z: 15,
+          ease: "none",
+        });
+        gsap.to(camera2.position, {
+          duration: 2,
+          delay: 4,
+          x: 5,
+          y: 17,
+          z: 15,
+          ease: "none",
+        });
+        gsap.to(camera2.position, {
+          duration: 2,
+          delay: 6,
+          x: 5,
+          y: 17,
+          z: 0,
+          ease: "none",
+        });
+        gsap.to(camera2.position, {
+          duration: 2,
+          delay: 6,
+          x: 0,
+          y: 15,
+          z: -8,
+          ease: "none",
+        });
+        gsap.to(camera2.rotation, {
+          duration: 2,
+          delay: 6,
+          x: 0,
+          y: -2.5,
+          z: 0,
+          ease: "none",
+        });
+      } else if (step1 && !step2 && scene2) {
+        gsap.to(camera2.position, {
           duration: 2,
           delay: 0,
           x: 0,
@@ -105,18 +168,6 @@ const onKeyDown = function (event) {
 
         setTimeout(() => {
           step2 = true;
-        }, 2000);
-      } else if (step1 && step2 && !step3) {
-        gsap.to(camera.position, {
-          duration: 2,
-          delay: 0,
-          x: -25,
-          y: 15,
-          z: -22,
-        });
-
-        setTimeout(() => {
-          step3 = true;
         }, 2000);
       }
 
@@ -276,7 +327,10 @@ door2.load(
  * Mouse Events
  */
 const mouse = new THREE.Vector2();
-
+window.addEventListener("mousemove", (event) => {
+  mouse.x = (event.clientX / sizes.width) * 2 - 1;
+  mouse.y = -(event.clientY / sizes.height) * 2 + 1;
+});
 /**
  * Renderer
  */
@@ -300,7 +354,6 @@ window.addEventListener("click", () => {
 
       console.log(document.fullscreenEnabled);
     } else {
-      controls.lock();
     }
   }
 });
@@ -311,40 +364,55 @@ window.addEventListener("click", () => {
 
 const raycaster = new THREE.Raycaster();
 
-let prevTime = performance.now();
-const direction = new THREE.Vector3();
+const clock = new THREE.Clock();
 let currentIntersect = null;
-raycaster.ray.origin.copy(camera.position);
-camera.getWorldDirection(raycaster.ray.direction);
-const animate = () => {
-  window.requestAnimationFrame(animate);
-  const time = performance.now();
 
-  if (controls.isLocked === true) {
+const tick = () => {
+  const elapsedTime = clock.getElapsedTime();
+
+  // Update Orbital Controls
+  if (scene2) {
+    controls2.update(0);
+    controls.unlock();
+  }
+  // Cast a ray
+  const rayDirection = new THREE.Vector3(100, 0, 0);
+  rayDirection.normalize();
+
+  if (scene2) {
+    raycaster.setFromCamera(mouse, camera2);
+  } else {
     raycaster.setFromCamera(mouse, camera);
-    direction.normalize(); // this ensures consistent movements in all directions
-
-    const objectsToTest = [crackers];
-    const intersects = raycaster.intersectObjects(objectsToTest);
-    if (intersects.length) {
-      if (!currentIntersect) {
-        crackers.material.color.set("#b35f45");
-        console.log("mouse enter");
-      }
-      currentIntersect = intersects[0];
-    } else {
-      if (currentIntersect) {
-        crackers.material.color.set("#fff");
-        console.log("mouse leave");
-      }
-
-      currentIntersect = null;
-    }
   }
 
+  const objectsToTest = [crackers];
+  const intersects = raycaster.intersectObjects(objectsToTest);
+
+  if (intersects.length) {
+    if (!currentIntersect) {
+      crackers.material.color.set("#b35f45");
+      console.log("mouse enter");
+    }
+
+    currentIntersect = intersects[0];
+  } else {
+    if (currentIntersect) {
+      crackers.material.color.set("#fff");
+      console.log("mouse leave");
+    }
+
+    currentIntersect = null;
+  }
   // Render
-  prevTime = time;
-  renderer.render(scene, camera);
+
+  if (scene2) {
+    renderer.render(scene, camera2);
+  } else {
+    renderer.render(scene, camera);
+  }
+
+  // Call tick again on the next frame
+  window.requestAnimationFrame(tick);
 };
 
-animate();
+tick();

@@ -26,7 +26,7 @@ export const crackers = new THREE.Mesh(
 );
 
 crackers.castShadow = true;
-crackers.rotation.y = Math.PI * 0.5;
+crackers.rotation.y = Math.PI * 1;
 crackers.position.set(0, 13, 0);
 crackers.scale.set(0.07, 0.1, 0.07);
 

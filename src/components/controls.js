@@ -1,5 +1,6 @@
-import { camera } from "./camera";
+import { camera,camera2 } from "./camera";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+import { FlyControls } from "three/examples/jsm/controls/FlyControls.js";
 
 export const controls = new PointerLockControls(camera, document.body);
 controls.pointerSpeed = 0.3;
@@ -19,6 +20,15 @@ controls.addEventListener("lock", function () {
 });
 
 controls.addEventListener("unlock", function () {
-  blocker.style.display = "block";
-  instructions.style.display = "";
+ 
 });
+
+
+
+
+export const controls2 = new FlyControls(camera2, document.body);
+controls2.enableDamping = true;
+controls2.movementSpeed = 0.5;
+controls2.rollSpeed = 0.05;
+controls2.autoForward = false;
+controls2.dragToLook = false;

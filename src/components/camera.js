@@ -45,3 +45,15 @@ cameraConfig.add(camera.position, "x").min(-100).max(100).step(0.001);
 cameraConfig.add(camera.position, "y").min(-100).max(100).step(0.001);
 cameraConfig.add(camera.position, "z").min(-100).max(100).step(0.001);
 
+
+
+export const camera2 = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  1,
+  1000
+);
+camera2.position.x = 15;
+camera2.position.y = 15;
+camera2.position.z = 7;
+camera2.rotation.y = (Math.PI / 2);;
