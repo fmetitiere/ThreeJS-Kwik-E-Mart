@@ -29,8 +29,9 @@ scene.add(crackers);
 
 //Loader
 
-scene.add(overlay);
+let isLoading = true;
 
+console.log(isLoading);
 // Products
 
 function addProducts(product, texture, posY, posZ, rotY) {
@@ -368,6 +369,15 @@ let currentIntersect = null;
 let previousTime = 0;
 
 const tick = () => {
+  if (isLoading) {
+    scene.add(overlay);
+    setTimeout(() => {
+      isLoading = false;
+    }, 2000);
+  } else {
+    scene.remove(overlay);
+  }
+  
   const elapsedTime = clock.getElapsedTime();
   const deltaTime = elapsedTime - previousTime;
   previousTime = elapsedTime;

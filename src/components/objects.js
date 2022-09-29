@@ -4,7 +4,7 @@ import { scene } from "./../main";
 import { loadingManager } from "./loader";
 import gsap from "gsap";
 
-const textureLoader = new THREE.TextureLoader();
+const textureLoader = new THREE.TextureLoader(loadingManager);
 
 // Floor
 export const floor = new THREE.Mesh(
