@@ -6,6 +6,7 @@ import {
   light,
   directionalLight,
   spotLight,
+  spotLight2
 } from "./components/lights";
 import { sizes, camera, camera2 } from "./components/camera";
 import { controls, controls2 } from "./components/controls";
@@ -77,6 +78,7 @@ addProducts("crack", "/textures/crackers.png", 13.7, 9.5, Math.PI / 11);
 scene.add(ambientLight);
 scene.add(directionalLight);
 scene.add(spotLight);
+scene.add(spotLight2);
 scene.add(light);
 
 /**
@@ -258,7 +260,22 @@ function nextStep() {
 // Market
 
 let apuMixer = null;
+let bartMixer = null;
 let mixer = null;
+
+const bart = new GLTFLoader(loadingManager);
+
+bart.load("/models/bart/model.gltf", (gltf) => {
+  scene.add(gltf.scene);
+  gltf.scene.scale.set(3, 3, 3);
+  gltf.scene.position.set(19, 22.5, 5);
+  gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
+  gltf.scene.castShadow = true;
+
+  bartMixer = new THREE.AnimationMixer(gltf.scene);
+  const action = bartMixer.clipAction(gltf.animations[0]);
+  action.play();
+});
 
 const apu = new GLTFLoader(loadingManager);
 
@@ -287,6 +304,9 @@ market.load("/models/kwik-e-model/scene.gltf", (gltf) => {
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 });
+
+Loader3D("springfield", "/models/mapa_springfield/scene.gltf", 4, 10, 10, -20, 0);
+
 
 Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 7, 10, 15, 0);
 Loader3D("rack-2", "/models/market_racks/model-empty-1.gltf", 0.5, 7, 10, 8, 0);
@@ -386,6 +406,10 @@ const tick = () => {
   }
   if (apuMixer !== null) {
     apuMixer.update(deltaTime);
+  }
+
+  if (bartMixer !== null) {
+    bartMixer.update(deltaTime);
   }
   // Update Orbital Controls
 
