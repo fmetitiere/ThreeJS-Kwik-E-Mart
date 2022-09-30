@@ -264,7 +264,7 @@ const apu = new GLTFLoader(loadingManager);
 
 apu.load("/models/apu/scene.gltf", (gltf) => {
   scene.add(gltf.scene);
-  gltf.scene.scale.set(2, 2, 2);
+  gltf.scene.scale.set(3, 3, 3);
   gltf.scene.position.set(13, 10, -5);
   gltf.scene.rotation.set(0, Math.PI * 0, 0);
   gltf.scene.castShadow = true;
