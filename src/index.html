@@ -98,22 +98,19 @@
         text-align: left;
         color: #000;
       }
-      #reset-btn {
+      .button-wrapper {
         position: absolute;
-        bottom: 1rem;
+        bottom: 2rem;
         left: 0;
         right: 0;
-        width: 7rem;
         margin: 0 auto;
+      }
+      #reset-btn {
+        width: 7rem;
         display: none;
       }
       #next-btn {
-        position: absolute;
-        bottom: 1rem;
-        left: 0;
-        right: 0;
         width: 7rem;
-        margin: 0 auto;
         display: none;
       }
       .close-btn {
@@ -185,8 +182,9 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" id="reset-btn">Reset</button>
-    <button class="btn btn-primary" id="next-btn">Next</button>
+    <div class="button-wrapper row justify-content-center">
+      <button class="btn btn-primary" id="next-btn">Next</button>
+    </div>
   </body>
   <script>
     function myFunction() {

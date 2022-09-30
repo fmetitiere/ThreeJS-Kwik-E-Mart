@@ -428,16 +428,13 @@ const tick = () => {
   }
   // Update Orbital Controls
 
-  var btnReset = document.getElementById("reset-btn");
   var btnNext = document.getElementById("next-btn");
   if (scene2 && !isCameraTravelling) {
-    btnReset.style.display = "block";
     btnNext.style.display = "block";
 
     controls2.update(0);
     controls.unlock();
   } else {
-    btnReset.style.display = "none";
     btnNext.style.display = "none";
   }
   // Cast a ray
