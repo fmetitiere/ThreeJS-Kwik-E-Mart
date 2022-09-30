@@ -71,6 +71,10 @@ addProducts("crack", "/textures/crackers.png", 11.7, 8.5, Math.PI / 1);
 addProducts("crack", "/textures/crackers.png", 10.7, 8.5, Math.PI / 1);
 
 addProducts("crack", "/textures/crackers.png", 13.7, 9.5, Math.PI / 11);
+addProducts("crack", "/textures/crackers.png", 12.7, 9.5, Math.PI / 11);
+addProducts("crack", "/textures/crackers.png", 11.7, 9.5, Math.PI / 11);
+addProducts("crack", "/textures/crackers.png", 10.7, 9.5, Math.PI / 11);
+
 
 /**
  * Lights
@@ -99,6 +103,7 @@ if (scene2) {
 
 let moveDoors = false;
 let isCameraTravelling = false;
+let isCameraTravelling2= false;
 let step1 = false;
 let step2 = false;
 let step3 = false;
@@ -201,7 +206,7 @@ const onKeyDown = function (event) {
           delay: 2,
           x: 6,
           y: 12,
-          z: 2.5,
+          z: 4.6,
         });
         gsap.to(camera2.rotation, {
           duration: 4,
@@ -228,12 +233,20 @@ const nextBtn = document.getElementById("next-btn");
 nextBtn.addEventListener("click", nextStep);
 
 function nextStep() {
-  if (step1 && !step2 && scene2 && !isCameraTravelling) {
+
+  if (isCameraTravelling2 === true) {
+    return false;
+  }
+  isCameraTravelling2 = true;
+  setTimeout(function () {
+    isCameraTravelling2 = false;
+  }, 8000);
+  if (step1 && !step2 && scene2 && !isCameraTravelling && isCameraTravelling2) {
     gsap.to(camera2.position, {
       duration: 2,
       delay: 0,
-      x: 0,
-      y: 15,
+      x: -1,
+      y: 16,
       z: 10,
     });
     gsap.to(camera2.position, {
@@ -241,7 +254,7 @@ function nextStep() {
       delay: 2,
       x: 6,
       y: 12,
-      z: 2.5,
+      z: 4.6,
     });
     gsap.to(camera2.rotation, {
       duration: 4,
@@ -310,6 +323,8 @@ Loader3D("springfield", "/models/mapa_springfield/scene.gltf", 4, 10, 10, -20, 0
 
 Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 7, 10, 15, 0);
 Loader3D("rack-2", "/models/market_racks/model-empty-1.gltf", 0.5, 7, 10, 8, 0);
+Loader3D("rack-3", "/models/market_racks/model-empty-1.gltf", 0.5, 7, 10, 2, 0);
+
 Loader3D("desktop", "/models/desktop.gltf", 0.45, 12, 10, -5, 0);
 Loader3D(
   "door-1",
@@ -415,7 +430,7 @@ const tick = () => {
 
   var btnReset = document.getElementById("reset-btn");
   var btnNext = document.getElementById("next-btn");
-  if (scene2) {
+  if (scene2 && !isCameraTravelling) {
     btnReset.style.display = "block";
     btnNext.style.display = "block";
 
