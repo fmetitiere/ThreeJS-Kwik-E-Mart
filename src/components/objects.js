@@ -20,7 +20,7 @@ floor.rotation.x = -Math.PI * 0.5;
 floor.position.y = 0;
 
 // Laundry
-const crackersColorTexture = textureLoader.load("/textures/crackers.png");
+const crackersColorTexture = textureLoader.load("/textures/Sharp-Os.png");
 
 export const crackers = new THREE.Mesh(
   new THREE.PlaneGeometry(17, 17, 1, 1),
@@ -32,7 +32,6 @@ export const crackers = new THREE.Mesh(
 
 crackers.castShadow = true;
 crackers.rotation.y = Math.PI * 1;
-crackers.position.set(4.3, 13.7, 8.4);
 crackers.scale.set(0.04, 0.05, 0.04);
 
 crackers.material.roughness = 0.1;
