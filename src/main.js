@@ -22,6 +22,7 @@ export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
 scene.fog = new THREE.Fog(0x87ceeb, 0, 750);
 
+
 //Objects
 scene.add(floor);
 scene.add(crackers);
