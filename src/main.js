@@ -6,7 +6,7 @@ import {
   light,
   directionalLight,
   spotLight,
-  spotLight2
+  spotLight2,
 } from "./components/lights";
 import { sizes, camera, camera2 } from "./components/camera";
 import { controls, controls2 } from "./components/controls";
@@ -16,7 +16,6 @@ import { loadingManager } from "./components/loader";
 
 import { crackers, Loader3D } from "./components/objects";
 import gsap from "gsap";
-
 
 // Scene
 export const scene = new THREE.Scene();
@@ -34,7 +33,7 @@ let isLoading = true;
 console.log(isLoading);
 // Products
 
-function addProducts(product, texture, posY, posZ, rotY) {
+function addProducts(product, texture, posY, posZ, rotY, quantity) {
   product = product;
   posY = posY;
   posZ = posZ;
@@ -42,7 +41,7 @@ function addProducts(product, texture, posY, posZ, rotY) {
   const textureLoader = new THREE.TextureLoader(loadingManager);
   const colorTexture = textureLoader.load(texture);
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < quantity; i++) {
     product = new THREE.Mesh(
       new THREE.PlaneGeometry(17, 17, 1, 1),
       new THREE.MeshStandardMaterial({
@@ -65,16 +64,15 @@ function addProducts(product, texture, posY, posZ, rotY) {
   }
 }
 
-addProducts("crack", "/textures/crackers.png", 13.7, 8.5, Math.PI / 1);
-addProducts("crack", "/textures/crackers.png", 12.7, 8.5, Math.PI / 1);
-addProducts("crack", "/textures/crackers.png", 11.7, 8.5, Math.PI / 1);
-addProducts("crack", "/textures/crackers.png", 10.7, 8.5, Math.PI / 1);
+addProducts("crack", "/textures/Sharp-Os.png", 13.7, 8.5, Math.PI / 1, 5);
+addProducts("crack", "/textures/Sharp-Os.png", 12.7, 8.5, Math.PI / 1, 6);
+addProducts("crack", "/textures/Sharp-Os.png", 11.7, 8.5, Math.PI / 1, 6);
+addProducts("crack", "/textures/Sharp-Os.png", 10.7, 8.5, Math.PI / 1, 6);
 
-addProducts("crack", "/textures/crackers.png", 13.7, 9.5, Math.PI / 11);
-addProducts("crack", "/textures/crackers.png", 12.7, 9.5, Math.PI / 11);
-addProducts("crack", "/textures/crackers.png", 11.7, 9.5, Math.PI / 11);
-addProducts("crack", "/textures/crackers.png", 10.7, 9.5, Math.PI / 11);
-
+addProducts("crack", "/textures/Sharp-Os.png", 13.7, 9.5, Math.PI / 11, 6);
+addProducts("crack", "/textures/Sharp-Os.png", 12.7, 9.5, Math.PI / 11, 6);
+addProducts("crack", "/textures/Sharp-Os.png", 11.7, 9.5, Math.PI / 11, 6);
+addProducts("crack", "/textures/Sharp-Os.png", 10.7, 9.5, Math.PI / 11, 6);
 
 /**
  * Lights
@@ -103,7 +101,7 @@ if (scene2) {
 
 let moveDoors = false;
 let isCameraTravelling = false;
-let isCameraTravelling2= false;
+let isCameraTravelling2 = false;
 let step1 = false;
 let step2 = false;
 let step3 = false;
@@ -232,8 +230,9 @@ document.addEventListener("keydown", onKeyDown);
 const nextBtn = document.getElementById("next-btn");
 nextBtn.addEventListener("click", nextStep);
 
-function nextStep() {
+var btnNext = document.getElementById("next-btn");
 
+function nextStep() {
   if (isCameraTravelling2 === true) {
     return false;
   }
@@ -311,15 +310,22 @@ market.load("/models/kwik-e-model/scene.gltf", (gltf) => {
   gltf.scene.scale.set(3, 3, 3);
   gltf.scene.position.set(10, 10, 5);
   gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
-  gltf.scene.castShadow = true;
+  gltf.scene.receiveShadow = true;
 
   mixer = new THREE.AnimationMixer(gltf.scene);
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 });
 
-Loader3D("springfield", "/models/mapa_springfield/scene.gltf", 4, 10, 10, -20, 0);
-
+Loader3D(
+  "springfield",
+  "/models/mapa_springfield/scene.gltf",
+  4,
+  10,
+  10,
+  -20,
+  0
+);
 
 Loader3D("rack-1", "/models/market_racks/model.gltf", 0.5, 7, 10, 15, 0);
 Loader3D("rack-2", "/models/market_racks/model-empty-1.gltf", 0.5, 7, 10, 8, 0);
@@ -373,6 +379,7 @@ window.addEventListener("mousemove", (event) => {
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
 /**
@@ -386,6 +393,7 @@ window.addEventListener("click", () => {
     if (currentIntersect.object === crackers) {
       console.log("crackers");
       elem.style.display = "block";
+      document.getElementById("autoplay").play();
     } else {
     }
   }
@@ -428,7 +436,6 @@ const tick = () => {
   }
   // Update Orbital Controls
 
-  var btnNext = document.getElementById("next-btn");
   if (scene2 && !isCameraTravelling) {
     btnNext.style.display = "block";
 
@@ -456,7 +463,7 @@ const tick = () => {
       gsap.to(crackers.position, {
         duration: 2,
         delay: 0,
-        x: 4.3,
+        x: 9.3,
         y: 13.9,
         z: 8.4,
       });
@@ -469,8 +476,8 @@ const tick = () => {
       crackers.material.color.set("#fff");
       gsap.to(crackers.position, {
         duration: 2,
-        delay: 0, 
-        x: 4.3,
+        delay: 0,
+        x: 9.3,
         y: 13.7,
         z: 8.4,
       });

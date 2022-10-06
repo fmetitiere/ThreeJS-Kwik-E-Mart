@@ -2,6 +2,7 @@ import * as THREE from "three";
 import * as dat from "dat.gui";
 
 const gui = new dat.GUI();
+dat.GUI.toggleHide();
 
 /**
  * Sizes
