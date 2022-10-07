@@ -1,6 +1,8 @@
 import "./style.css";
 import * as THREE from "three";
-import { floor } from "./components/objects";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import gsap from "gsap";
+
 import {
   ambientLight,
   light,
@@ -8,72 +10,25 @@ import {
   spotLight,
   spotLight2,
 } from "./components/lights";
-import { sizes, camera, camera2 } from "./components/camera";
+import {
+  floor,
+  crackers,
+  addShelfProducts,
+  Loader3D,
+} from "./components/objects";
+import { sizes, camera, camera2, cameraAnim } from "./components/camera";
 import { controls, controls2 } from "./components/controls";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { overlay } from "./components/loader";
 import { loadingManager } from "./components/loader";
-
-import { crackers, Loader3D } from "./components/objects";
-import gsap from "gsap";
 
 // Scene
 export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
 scene.fog = new THREE.Fog(0x87ceeb, 0, 750);
 
-
 //Objects
 scene.add(floor);
 scene.add(crackers);
-
-//Loader
-
-let isLoading = true;
-
-console.log(isLoading);
-// Products
-
-function addProducts(product, texture, posY, posZ, rotY, quantity) {
-  product = product;
-  posY = posY;
-  posZ = posZ;
-  rotY = rotY;
-  const textureLoader = new THREE.TextureLoader(loadingManager);
-  const colorTexture = textureLoader.load(texture);
-
-  for (let i = 0; i < quantity; i++) {
-    product = new THREE.Mesh(
-      new THREE.PlaneGeometry(17, 17, 1, 1),
-      new THREE.MeshStandardMaterial({
-        map: colorTexture,
-        transparent: true,
-      })
-    );
-
-    const x = i * 1 + 4.3;
-
-    product.castShadow = true;
-    product.rotation.y = rotY;
-    product.scale.set(0.04, 0.05, 0.04);
-    product.position.set(x, posY, posZ);
-
-    product.material.roughness = 0.6;
-    product.material.metalness = 0.2;
-
-    scene.add(product);
-  }
-}
-
-addProducts("crack", "/textures/Sharp-Os.png", 13.7, 8.5, Math.PI / 1, 5);
-addProducts("crack", "/textures/Sharp-Os.png", 12.7, 8.5, Math.PI / 1, 6);
-addProducts("crack", "/textures/Sharp-Os.png", 11.7, 8.5, Math.PI / 1, 6);
-addProducts("crack", "/textures/Sharp-Os.png", 10.7, 8.5, Math.PI / 1, 6);
-
-addProducts("crack", "/textures/Sharp-Os.png", 13.7, 9.5, Math.PI / 11, 6);
-addProducts("crack", "/textures/Sharp-Os.png", 12.7, 9.5, Math.PI / 11, 6);
-addProducts("crack", "/textures/Sharp-Os.png", 11.7, 9.5, Math.PI / 11, 6);
-addProducts("crack", "/textures/Sharp-Os.png", 10.7, 9.5, Math.PI / 11, 6);
 
 /**
  * Lights
@@ -98,14 +53,41 @@ if (scene2) {
   scene.remove(camera2);
 }
 
+//Loader
+
+let isLoading = true;
+
+// Shelf Products
+
+addShelfProducts("crack", "/textures/Sharp-Os.png", 13.7, 8.5, Math.PI / 1, 5);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 12.7, 8.5, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 11.7, 8.5, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 10.7, 8.5, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 13.7, 9.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 12.7, 9.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 11.7, 9.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 10.7, 9.5, Math.PI / 11, 6);
+
+addShelfProducts("crack", "/textures/Sharp-Os.png", 13.7, 2, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 12.7, 2, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 11.7, 2, Math.PI / 1, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 10.7, 2, Math.PI / 1, 6);
+
+addShelfProducts("crack", "/textures/Sharp-Os.png", 13.7, 3.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 12.7, 3.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 11.7, 3.5, Math.PI / 11, 6);
+addShelfProducts("crack", "/textures/Sharp-Os.png", 10.7, 3.5, Math.PI / 11, 6);
+
+
+
+
+
 // Controls
 
-let moveDoors = false;
 let isCameraTravelling = false;
 let isCameraTravelling2 = false;
 let step1 = false;
 let step2 = false;
-let step3 = false;
 
 const onKeyDown = function (event) {
   switch (event.code) {
@@ -118,102 +100,29 @@ const onKeyDown = function (event) {
       setTimeout(function () {
         isCameraTravelling = false;
       }, 8000);
-      console.log(isCameraTravelling);
 
       if (!step1) {
-        gsap.to(camera.position, {
-          duration: 2,
-          delay: 0,
-          x: 15,
-          y: 15,
-          z: 7,
-          ease: "none",
-        });
+        cameraAnim(camera.position, 2, 0, 15, 15, 7, "none");
 
         setTimeout(() => {
           step1 = true;
           scene2 = true;
         }, 2000);
         if (isCameraTravelling) {
-          gsap.to(camera2.position, {
-            duration: 2,
-            delay: 2,
-            x: 15,
-            y: 17,
-            z: 20,
-            ease: "none",
-          });
-          gsap.to(camera2.rotation, {
-            duration: 2,
-            delay: 2,
-            x: 0,
-            y: 0,
-            z: 0,
-            ease: "none",
-          });
-          gsap.to(camera2.position, {
-            duration: 2,
-            delay: 2,
-            x: 5,
-            y: 17,
-            z: 23,
-            ease: "none",
-          });
-          gsap.to(camera2.position, {
-            duration: 2,
-            delay: 4,
-            x: 5,
-            y: 17,
-            z: 15,
-            ease: "none",
-          });
-          gsap.to(camera2.position, {
-            duration: 2,
-            delay: 6,
-            x: 5,
-            y: 17,
-            z: 0,
-            ease: "none",
-          });
-          gsap.to(camera2.position, {
-            duration: 2,
-            delay: 6,
-            x: 0,
-            y: 15,
-            z: -8,
-            ease: "none",
-          });
-          gsap.to(camera2.rotation, {
-            duration: 2,
-            delay: 6,
-            x: 0,
-            y: -2.5,
-            z: 0,
-            ease: "none",
-          });
+          cameraAnim(camera2.rotation, 2, 2, 0, 0, 0, "none");
+          cameraAnim(camera2.position, 2, 2, 5, 17, 23, "none");
+          cameraAnim(camera2.position, 2, 4, 5, 17, 15, "none");
+          cameraAnim(camera2.position, 2, 6, 5, 17, 0, "none");
+          cameraAnim(camera2.position, 2, 6, 0, 17, -8, "none");
+          cameraAnim(camera2.rotation, 2, 6, 0, -2.5, 0, "none");
         }
       } else if (step1 && !step2 && scene2) {
-        gsap.to(camera2.position, {
-          duration: 2,
-          delay: 0,
-          x: 0,
-          y: 15,
-          z: 10,
-        });
-        gsap.to(camera2.position, {
-          duration: 4,
-          delay: 2,
-          x: 6,
-          y: 12,
-          z: 4.6,
-        });
-        gsap.to(camera2.rotation, {
-          duration: 4,
-          delay: 2,
-          x: 0,
-          y: -3,
-          z: 0,
-        });
+        cameraAnim(camera2.position, 2, 0, -1, 16, 10, "none");
+        cameraAnim(camera2.position, 4, 2, 3, 15, 4.6, "none");
+        cameraAnim(camera2.rotation, 4, 2, 0, -2.5, 0, "none");
+        cameraAnim(camera2.position, 4, 4, 6, 12, 4.6, "none");
+        cameraAnim(camera2.rotation, 4, 4, 0, -3, 0, "none");
+        
 
         setTimeout(() => {
           step2 = true;
@@ -242,27 +151,11 @@ function nextStep() {
     isCameraTravelling2 = false;
   }, 8000);
   if (step1 && !step2 && scene2 && !isCameraTravelling && isCameraTravelling2) {
-    gsap.to(camera2.position, {
-      duration: 2,
-      delay: 0,
-      x: -1,
-      y: 16,
-      z: 10,
-    });
-    gsap.to(camera2.position, {
-      duration: 4,
-      delay: 2,
-      x: 6,
-      y: 12,
-      z: 4.6,
-    });
-    gsap.to(camera2.rotation, {
-      duration: 4,
-      delay: 2,
-      x: 0,
-      y: -3,
-      z: 0,
-    });
+    cameraAnim(camera2.position, 2, 0, -1, 16, 10, "none");
+    cameraAnim(camera2.position, 4, 2, 3, 15, 4.6, "none");
+    cameraAnim(camera2.rotation, 4, 2, 0, -2.5, 0, "none");
+    cameraAnim(camera2.position, 4, 4, 6, 12, 4.6, "none");
+    cameraAnim(camera2.rotation, 4, 4, 0, -3, 0, "none");
 
     setTimeout(() => {
       step2 = true;
@@ -392,7 +285,6 @@ window.addEventListener("click", () => {
 
   if (currentIntersect) {
     if (currentIntersect.object === crackers) {
-      console.log("crackers");
       elem.style.display = "block";
       document.getElementById("autoplay").play();
     } else {

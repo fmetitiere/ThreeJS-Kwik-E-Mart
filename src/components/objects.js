@@ -19,7 +19,7 @@ export const floor = new THREE.Mesh(
 floor.rotation.x = -Math.PI * 0.5;
 floor.position.y = 0;
 
-// Laundry
+// Crackers
 const crackersColorTexture = textureLoader.load("/textures/Sharp-Os.png");
 
 export const crackers = new THREE.Mesh(
@@ -36,6 +36,40 @@ crackers.scale.set(0.04, 0.05, 0.04);
 
 crackers.material.roughness = 0.1;
 crackers.material.metalness = 0.2;
+
+
+// Shlef Products
+
+export function addShelfProducts(product, texture, posY, posZ, rotY, quantity) {
+  product = product;
+  posY = posY;
+  posZ = posZ;
+  rotY = rotY;
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const colorTexture = textureLoader.load(texture);
+
+  for (let i = 0; i < quantity; i++) {
+    product = new THREE.Mesh(
+      new THREE.PlaneGeometry(17, 17, 1, 1),
+      new THREE.MeshStandardMaterial({
+        map: colorTexture,
+        transparent: true,
+      })
+    );
+
+    const x = i * 1 + 4.3;
+
+    product.castShadow = true;
+    product.rotation.y = rotY;
+    product.scale.set(0.04, 0.05, 0.04);
+    product.position.set(x, posY, posZ);
+
+    product.material.roughness = 0.6;
+    product.material.metalness = 0.2;
+
+    scene.add(product);
+  }
+}
 
 // 3D Objects
 
@@ -70,7 +104,6 @@ export function Loader3D(
   animZ = animZ;
 
   return name.load(url, (gltf) => {
-    console.log(gltf);
     scene.add(gltf.scene);
     gltf.scene.scale.set(scale, scale, scale);
     gltf.scene.position.set(positionX, positionY, positionZ);
