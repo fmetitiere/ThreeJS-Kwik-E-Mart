@@ -135,7 +135,6 @@ window.addEventListener("click", () => {});
 
 document.addEventListener("keydown", onKeyDown);
 
-var btnNext = document.getElementById("next-btn");
 const nextBtn = document.getElementById("next-btn");
 nextBtn.addEventListener("click", nextStep);
 
@@ -334,13 +333,12 @@ const tick = () => {
   // Update Orbital Controls
 
   if (scene2 && !isCameraTravelling) {
-    startBtn.style.display = "none";
-    btnNext.style.display = "block";
+    nextBtn.style.display = "block";
 
     controls2.update(0);
     controls.unlock();
   } else {
-    btnNext.style.display = "none";
+    nextBtn.style.display = "none";
   }
   // Cast a ray
   const rayDirection = new THREE.Vector3(100, 0, 0);
@@ -348,6 +346,7 @@ const tick = () => {
 
   if (scene2) {
     raycaster.setFromCamera(mouse, camera2);
+    startBtn.style.display = "none";
   } else {
     raycaster.setFromCamera(mouse, camera);
   }
