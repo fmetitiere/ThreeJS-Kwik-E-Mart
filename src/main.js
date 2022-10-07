@@ -78,10 +78,6 @@ addShelfProducts("crack", "/textures/Sharp-Os.png", 12.7, 3.5, Math.PI / 11, 6);
 addShelfProducts("crack", "/textures/Sharp-Os.png", 11.7, 3.5, Math.PI / 11, 6);
 addShelfProducts("crack", "/textures/Sharp-Os.png", 10.7, 3.5, Math.PI / 11, 6);
 
-
-
-
-
 // Controls
 
 let isCameraTravelling = false;
@@ -89,46 +85,48 @@ let isCameraTravelling2 = false;
 let step1 = false;
 let step2 = false;
 
+function cameraSceneAnimation() {
+  if (isCameraTravelling === true) {
+    return false;
+  }
+  isCameraTravelling = true;
+  setTimeout(function () {
+    isCameraTravelling = false;
+  }, 8000);
+
+  if (!step1) {
+    cameraAnim(camera.position, 2, 0, 15, 15, 7, "none");
+
+    setTimeout(() => {
+      step1 = true;
+      scene2 = true;
+    }, 2000);
+    if (isCameraTravelling) {
+      cameraAnim(camera2.rotation, 2, 2, 0, 0, 0, "none");
+      cameraAnim(camera2.position, 2, 2, 5, 17, 23, "none");
+      cameraAnim(camera2.position, 2, 4, 5, 17, 15, "none");
+      cameraAnim(camera2.position, 2, 6, 5, 17, 0, "none");
+      cameraAnim(camera2.position, 2, 6, 0, 17, -8, "none");
+      cameraAnim(camera2.rotation, 2, 6, 0, -2.5, 0, "none");
+    }
+  } else if (step1 && !step2 && scene2) {
+    cameraAnim(camera2.position, 2, 0, -1, 16, 10, "none");
+    cameraAnim(camera2.position, 4, 2, 3, 15, 4.6, "none");
+    cameraAnim(camera2.rotation, 4, 2, 0, -2.5, 0, "none");
+    cameraAnim(camera2.position, 4, 4, 6, 12, 4.6, "none");
+    cameraAnim(camera2.rotation, 4, 4, 0, -3, 0, "none");
+
+    setTimeout(() => {
+      step2 = true;
+    }, 2000);
+  }
+}
+
 const onKeyDown = function (event) {
   switch (event.code) {
     case "ArrowUp":
     case "KeyW":
-      if (isCameraTravelling === true) {
-        return false;
-      }
-      isCameraTravelling = true;
-      setTimeout(function () {
-        isCameraTravelling = false;
-      }, 8000);
-
-      if (!step1) {
-        cameraAnim(camera.position, 2, 0, 15, 15, 7, "none");
-
-        setTimeout(() => {
-          step1 = true;
-          scene2 = true;
-        }, 2000);
-        if (isCameraTravelling) {
-          cameraAnim(camera2.rotation, 2, 2, 0, 0, 0, "none");
-          cameraAnim(camera2.position, 2, 2, 5, 17, 23, "none");
-          cameraAnim(camera2.position, 2, 4, 5, 17, 15, "none");
-          cameraAnim(camera2.position, 2, 6, 5, 17, 0, "none");
-          cameraAnim(camera2.position, 2, 6, 0, 17, -8, "none");
-          cameraAnim(camera2.rotation, 2, 6, 0, -2.5, 0, "none");
-        }
-      } else if (step1 && !step2 && scene2) {
-        cameraAnim(camera2.position, 2, 0, -1, 16, 10, "none");
-        cameraAnim(camera2.position, 4, 2, 3, 15, 4.6, "none");
-        cameraAnim(camera2.rotation, 4, 2, 0, -2.5, 0, "none");
-        cameraAnim(camera2.position, 4, 4, 6, 12, 4.6, "none");
-        cameraAnim(camera2.rotation, 4, 4, 0, -3, 0, "none");
-        
-
-        setTimeout(() => {
-          step2 = true;
-        }, 2000);
-      }
-
+      cameraSceneAnimation();
       break;
   }
 };
@@ -137,10 +135,16 @@ window.addEventListener("click", () => {});
 
 document.addEventListener("keydown", onKeyDown);
 
+var btnNext = document.getElementById("next-btn");
 const nextBtn = document.getElementById("next-btn");
 nextBtn.addEventListener("click", nextStep);
 
-var btnNext = document.getElementById("next-btn");
+const startBtn = document.getElementById("start-btn");
+startBtn.addEventListener("click", startScene);
+
+function startScene() {
+  cameraSceneAnimation();
+}
 
 function nextStep() {
   if (isCameraTravelling2 === true) {
@@ -330,6 +334,7 @@ const tick = () => {
   // Update Orbital Controls
 
   if (scene2 && !isCameraTravelling) {
+    startBtn.style.display = "none";
     btnNext.style.display = "block";
 
     controls2.update(0);
