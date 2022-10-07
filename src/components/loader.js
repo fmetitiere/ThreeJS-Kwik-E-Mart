@@ -26,7 +26,6 @@ export const loadingManager = new THREE.LoadingManager(
         loadingBarElement.style.transform = `scaleX(${progressRatio})`
     }
 )
-console.log(loadingManager)
 
 const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
 const overlayMaterial = new THREE.ShaderMaterial({
